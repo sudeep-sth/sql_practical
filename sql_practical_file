@@ -1,0 +1,569 @@
+create database fouth_practical
+
+drop database fouth_practical
+
+use fouth_practical
+
+
+
+/*1. create table class*/
+
+create table class(
+class_id int primary key not null,
+);
+
+select*from  class
+
+
+
+
+/*create table foreign key on class(class_id) */
+
+create table students
+(
+student_id INT  NOT NULL CONSTRAINT pk_student PRIMARY KEY IDENTITY(1,1 ) ,
+name varchar(50) not null constraint uk_name unique,
+s_address varchar(50) not null constraint df_address default 'birtamod',
+age int not null constraint df_age default 16 check(age>=15),
+section varchar(50) not null,
+class_id INT NOT NULL CONSTRAINT fk_class FOREIGN KEY(class_id) REFERENCES class(class_id),
+);
+ 
+ select * from students
+ drop table students
+
+
+
+/*2. drop primary key*/
+
+ALTER TABLE  students
+DROP CONSTRAINT pk_student;
+
+
+
+
+/*3 drop foreign key*/
+
+alter table students
+drop constraint fk_class;
+
+
+
+/*4 add constraint pk*/
+
+alter table students
+add constraint pk_student primary key (student_id);
+
+
+
+/*5 add consraint fk*/
+
+alter table students
+add constraint fk_class foreign key(class_id) references class(class_id);
+
+
+
+/*6. remove unique constraint */
+
+alter table students
+drop constraint uk_name;
+
+
+
+/*7 remove deafult */
+
+alter table students
+drop constraint df_age;
+
+
+
+/* 8 add constraint unique */
+
+alter table students
+add constraint uk_student unique(section);
+
+
+
+/*9 change defult value */
+
+alter table students
+
+ADD CONSTRAINT df_age DEFAULT 18 FOR age;
+ 
+
+
+/*10 change name */
+
+exec sp_rename 'students.s_address' , 'location','Column';
+
+
+
+/* 11 add new not null column  */
+
+alter table students
+add email varchar(50) not null;
+
+
+
+/* 12 remove column section */
+
+alter table students
+drop constraint uk_student;
+
+
+alter table students
+drop column section;
+
+
+
+
+/* 13 add new column integer contact*/
+
+alter table students
+add contact int;
+
+
+
+/* 14 change data type and add unique */
+
+alter table students
+alter column contact varchar(50);
+
+alter table students
+add constraint uk_contact unique(contact);
+
+
+
+
+/*15 change defult value of address to kathmandu */
+
+alter table students
+drop constraint df_address;
+
+alter table students
+add constraint df_address default 'kathmandu' for location;
+
+
+
+/* 16 insert data */
+
+insert into class(class_id) values('1'),('2'),('3'),('4'),('5');
+
+set identity_insert students on
+insert into students (student_id,name,location,age,email,contact,class_id)
+values('1','prativa','naurangi','20','prativa@gmail.com','9876555555','1'),
+('2','sudip','btm','22','sudip@gmail.com','98564738284','1'),
+('3','sandip','padampur','19','sandip@gmail.com','9879238473','5'),
+('4','suman','dharechowk','22','suman@gmail.com','988787676','4'),
+('5','dol','jutpani','23','dol@gmail.com','988787849','2'),
+('6','sanjay','aaptandi','19','sanjay@gmail.com','9876555666','5'),
+('7','artee','britamod','18','artee@gmail.com','98564738484','1'),
+('8','bikal','pulchowk','24','bikal@gmail.com','9879238374','3'),
+('9','aayush','mangalpur','25','aayush@gmail.com','988787767','4'),
+('10','amrit','ktm','30','amrit@gmail.com','988787948','2')
+('11','ram','tandi','30','bashudev@gmail.com','988787894','2');
+
+select * from students;
+drop table students;
+
+/*17 update name and address of student whose student id is 5*/
+
+update students set name='sakshyam', location='kathmandu' where student_id=5;
+
+
+
+/*18  DELETE the records of student having age greater than 20 */
+
+delete from students where age>20;
+
+
+
+/*19. to update age of student having address btm.*/
+
+update students set age='19' where location='btm';
+
+
+
+/*20.  to delete all records of student having student id 1.*/
+
+delete students where student_id='1';
+
+
+
+/*21  select all records of student */
+
+select*from students;
+
+
+
+/* 22 select all student where student id = 3 */
+
+select*from students where student_id='3';
+
+
+
+/* 23 select name and address of students whose age is greater than 21 */
+
+select name, location from students where age>21;
+
+
+
+/*24 select student id and name of students whose address in Birtamode.*/
+
+select student_id, name from students where location='birtamod';
+
+
+
+/* 25 select records of students whose class id is 5 and address is Kathmandu */
+
+select * from students where location='kathmandu' and class_id='5';
+
+
+
+/*26 select maximum age from above table */
+
+select MAX(age) from students;
+
+
+
+/* 27 select minimum age of students whose address is Birtamode */
+
+select MIN(age) from students where location='birtamode';
+
+
+
+
+/*28 find total number of students having class id 5 and age greater than 19 */
+
+select count(name) from students where class_id='5' and age>19;
+
+
+
+
+/*29  find average age of students whose class id is 4 and section is B */
+
+alter table students
+add section varchar(20);
+select*from students;
+select section from students;
+
+update students set section='b' where class_id='3';
+update students set section='b' where class_id='2';
+
+update students set section='c' where class_id='1';
+
+
+select AVG(age) from students where class_id='4' and section='b';
+
+
+
+/*30 select students whose address starts with letter B */
+
+select * from students where location like 'b%';
+
+
+
+/*31  count those students whose name ends with letter R */
+
+select count(student_id) from students where name like '%R';
+
+
+
+/*32. select name and age of students whose having address btm or ktm. */
+
+select name, age from students where location = 'btm' or location='ktm' ;
+
+
+
+/*33. select sum of age of students having id 1,2 and 3 */
+
+select sum(age) from students where student_id in (1,2,3);
+
+
+
+
+/*34.  students whose age is between 18 and 22.*/
+
+select name 
+from students
+ where age between 18 and 22;
+
+
+ 
+/*35. select total students of each age group. */
+
+SELECT COUNT(age) as no_of_student, age
+FROM students
+GROUP BY age;
+
+
+
+/*36. select class id, name and maximum age of students studying in each class. */
+
+SELECT class_id, name, MAX(age) as age
+FROM students
+GROUP BY name,class_id;
+
+
+
+/* 37 select students records by arranging in descending order on the basis of student id */
+
+select * from students
+order by student_id desc;
+
+
+
+/*38. select student id and name by of students whose age is greater than 20 after arranging records in alphabetical order on the basis of name */
+
+select student_id, name from students where age>20 order by name asc;
+
+
+
+/*39 select records of student whose age is maximum among all the students */
+
+select max(age) from students
+
+
+/*40. select student id and name of student whose student id is maximum among all the students */
+
+SELECT  name, student_id from students where student_id=(select MAX(student_id) from students);
+
+
+
+/*41. select name and age of student whose age is minimum than the average age of all students */
+
+select name, age from students where age=(select min(age) from students);
+
+
+
+/* 42 list all the students except btm & ktm in asc order of age */
+
+select name from students except select location=('btm''ktm') from students order by name ;
+
+
+
+/*43. students who does not belong to address btm */
+
+select name from students except select location='btm';
+
+
+
+/* 44   display the location of Ram*/
+
+select student_id, name from students where name='ram';
+
+
+
+/* 45. display the total information of student table along with name and location of all the students having address Birtamode*/
+
+select name, location from students where location='tandi';
+
+
+
+/*********************************************************************************************/
+
+
+/* 46  table below with appropriate data type and constraints.  */
+
+create table Department (
+Dep_id int not null primary key,
+Dep_Name varchar(50),
+floor_ varchar(10),
+);
+
+create table Employee(
+Empl_id int not null primary key,
+Name varchar(50) not null,
+Address_ varchar(50) not null,
+Salary money not null,
+Dep_id int not null foreign key(Dep_id) references Department(Dep_id)
+);
+
+insert into Department(Dep_id, Dep_Name, floor_)values('1','administrator','1st'),
+('2','Engineer','2nd'), 
+('3','Developer','3rd'), 
+('4','Project Manager','4th');
+
+insert into Employee(Empl_id, Name, Address_, Salary, Dep_id)
+values('1','Sandip Bhatrai','Saradpur','93750','1'),
+('2','Ambika Paudel','Tandi','70000','1'),
+('3','Binod Chaudhari','Pokhara','78000','1'),
+
+
+('4','Dheraj karki', 'Kathmandu','60000','2'),
+('5','Ganu Magar','Gorkha','67800','2'),
+
+
+('6','Kamal khatri','Chetrapur','110140','3'),
+('7','Sudip shrestha','Bharatpur','125000','3'),
+('8','Saroj Tamang','Kalika','100000','2'),
+
+
+('9','Suman Khatri','Rampur','126000','4');
+
+
+select*FROM Department;
+drop table department;
+
+select*from Employee;
+drop table employee;
+
+delete from Department;
+
+
+
+
+/* 47  Use all types of joins to select employee id, name and department name of employees */
+
+ /* inner join */
+ select Employee.Empl_id,Employee.Name,Department.Dep_Name	from Employee
+ inner join Department on Employee.Dep_id = Department.Dep_id;
+
+ /* left(outer) join */
+  select Employee.Empl_id,Employee.Name,Department.Dep_Name from Employee
+LEFT JOIN Department ON Employee.Dep_id = Department.Dep_id
+
+ /*right join*/ 
+  select Employee.Empl_id,Employee.Name,Department.Dep_Name from Employee
+right JOIN Department
+ON Employee.Dep_id = Department.Dep_id
+ 
+ /*full join */
+ select Employee.Empl_id,Employee.Name,Department.Dep_Name
+ from Employee
+full outer JOIN Department
+ON Employee.Dep_id = Department.Dep_id
+
+
+
+
+
+/*48.  Select name and address of employees whose salary is between 100000 and 200000 */
+
+select name, address_ from Employee where Salary between 100000 and 200000;
+
+
+
+
+/*49.  Select employee id, employee name and department name of employees working in first floor*/
+
+select Employee.Empl_id, Employee.Name, Department.Dep_Name
+from Employee
+inner join Department on Employee.Dep_id=Department.Dep_id
+where floor_='1st';
+
+
+/*50. Select all records of department which are in second floor. */
+
+select*from Department where floor_='2nd';
+
+
+
+
+/*51. Select name, address and department name of employees which are from Birtamode*/
+
+select Employee.Empl_id, Employee.Name, Department.Dep_Name
+from Employee
+inner join Department on Employee.Dep_id=Department.Dep_id
+where Address_='pokhara';
+
+
+
+
+/*52. Select employee id and name of employees having salary more than 10000 and from Kathmandu*/
+
+select Empl_id, Name from Employee where Salary>100000 and address_='kathmanud';
+
+
+
+
+/*53. select name, department name and floor of employee whose name start with letter R and age is greater than 30  */
+
+alter table employee
+add age int;
+
+
+update employee set age='45' where dep_id='3';
+update employee set age='30' where dep_id='2';
+
+update employee set age='25' where dep_id='1';
+
+update employee set age='50' where dep_id='4';
+
+select Employee.Name, Department.Dep_Name, Department.Floor_
+from Employee
+left join Department on Employee.Dep_id= Department.Dep_id
+where Name like 'r%'age>30;
+
+
+
+
+
+/* 54. Select employee id and department name of employees whose floor is �first� by arranging in ascending order on the basis of salary  */
+
+select Employee.Empl_id, Department.Dep_Name
+from Employee
+right join Department on Employee.Dep_id = Department.Dep_id
+where Floor='1st' order by Salary asc;
+
+
+
+
+/*55. Select total number of employee working in each departmen*/
+
+SELECT
+Dep_id,
+count(*)
+FROM
+	Employee
+	group by Dep_id
+
+
+
+/*56. Select maximum salary of employee working in each floor and whose department is Developer  */
+
+select Department.Floor,
+ max(Employee.Salary)
+ from Employee
+inner join Department on Employee.Dep_id = Department.Dep_id 
+ where Dep_Name='Developer'
+ group by Floor;
+
+
+
+
+/*57. Select name and department name of employees whose salary is greater than average salary of all employees.*/
+
+select Employee.Name, Department.Dep_Name
+from Employee
+inner join Department on Employee.Dep_id=Department.Dep_id
+where salary>(select avg(salary) from Employee)
+
+
+
+/*58. Select name and address of employee whore salary is between 20000 and 30000 and floor is second*/
+
+select Name, Address
+from Employee
+where Salary between 200000 and 300000;
+
+
+
+/*59. Select name and department name employee whose age is minimum */
+
+select Employee.Name, Employee.Salary, Department.Dep_Name
+from Employee
+join Department on Employee.Dep_id = Department.Dep_id
+where Salary=(select min(Salary) from Employee);
+
+
+
+
+/*60. select sum of salary of all employees whose name ends with letter s and department is Account  */
+
+select sum(salary)
+from Employee
+where Name like '$p'
+
+
+
