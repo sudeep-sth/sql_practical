@@ -385,21 +385,21 @@ insert into Department(Dep_id, Dep_Name, floor_)values('1','administrator','1st'
 ('4','Project Manager','4th');
 
 insert into Employee(Empl_id, Name, Address_, Salary, Dep_id)
-values('1','Sandip Bhatrai','Saradpur','93750','1'),
-('2','Ambika Paudel','Tandi','70000','1'),
-('3','Binod Chaudhari','Pokhara','78000','1'),
+values('1','Sandip shrestha','Saradpur','125500','3'),
+('2','artee dalakoti','Tandi','70000','1'),
+('3','sakshyam shrestha','Pokhara','78000','1'),
 
 
-('4','Dheraj karki', 'Kathmandu','60000','2'),
-('5','Ganu Magar','Gorkha','67800','2'),
+('4','bikal adhakari', 'Kathmandu','60000','2'),
+('5','kapil magar','Gorkha','67800','2'),
 
 
-('6','Kamal khatri','Chetrapur','110140','3'),
-('7','Sudip shrestha','Bharatpur','125000','3'),
-('8','Saroj Tamang','Kalika','100000','2'),
+('6','prativa sapkota','Chetrapur','125600','3'),
+('7','Sudip shrestha','Bharatpur','140000','4'),
+('8','ravi tamang','Kalika','100000','2'),
 
 
-('9','Suman Khatri','Rampur','126000','4');
+('9','Suman Khatri','Rampur','125550','3');
 
 
 select*FROM Department;
@@ -493,18 +493,18 @@ update employee set age='50' where dep_id='4';
 select Employee.Name, Department.Dep_Name, Department.Floor_
 from Employee
 left join Department on Employee.Dep_id= Department.Dep_id
-where Name like 'r%'age>30;
+where Name like 'r%'and age>30;
 
 
 
 
 
-/* 54. Select employee id and department name of employees whose floor is �first� by arranging in ascending order on the basis of salary  */
+/* 54. Select employee id and department name of employees whose floor is 1st by arranging in ascending order on the basis of salary  */
 
 select Employee.Empl_id, Department.Dep_Name
 from Employee
 right join Department on Employee.Dep_id = Department.Dep_id
-where Floor='1st' order by Salary asc;
+where Floor_='1st' order by Salary asc;
 
 
 
@@ -522,12 +522,11 @@ FROM
 
 /*56. Select maximum salary of employee working in each floor and whose department is Developer  */
 
-select Department.Floor,
- max(Employee.Salary)
- from Employee
+select Department.Floor_,
+ max(Employee.Salary) from Employee
 inner join Department on Employee.Dep_id = Department.Dep_id 
  where Dep_Name='Developer'
- group by Floor;
+ group by Floor_;
 
 
 
@@ -541,29 +540,29 @@ where salary>(select avg(salary) from Employee)
 
 
 
-/*58. Select name and address of employee whore salary is between 20000 and 30000 and floor is second*/
+/*58. Select name and address of employee whore salary is between 60000 and 80000 and floor is second*/
 
-select Name, Address
+select Name, Address_
 from Employee
-where Salary between 200000 and 300000;
+where Salary between 60000 and 80000;
 
 
 
-/*59. Select name and department name employee whose age is minimum */
+/*59. Select name and department name from employee whose age is minimum */
 
-select Employee.Name, Employee.Salary, Department.Dep_Name
-from Employee
+select Employee.Name, Employee.Salary, Department.Dep_Name from Employee
 join Department on Employee.Dep_id = Department.Dep_id
-where Salary=(select min(Salary) from Employee);
+where Salary=(select min(age) from Employee);
 
 
 
 
 /*60. select sum of salary of all employees whose name ends with letter s and department is Account  */
 
+
 select sum(salary)
 from Employee
-where Name like '$p'
+where Name like '%s'
 
 
 
